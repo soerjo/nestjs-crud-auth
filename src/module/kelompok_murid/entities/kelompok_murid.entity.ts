@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -17,17 +18,16 @@ export class KelompokMurid {
   @Column()
   nama_kelompok_murid: string;
 
-  @OneToOne(() => JemaatEntity)
-  pembimbing: JemaatEntity;
-
-  @OneToMany(() => JemaatEntity, (jemaat) => jemaat.id)
-  murid: JemaatEntity[];
-
   @Column()
   buku: string;
 
-  @Column({ type: 'float' })
-  performance_a_month: number;
+  @OneToOne(() => JemaatEntity)
+  @JoinColumn()
+  pembimbing: JemaatEntity;
+
+  @OneToMany(() => JemaatEntity, (jemaat) => jemaat.kelompok_murid)
+  @JoinColumn()
+  murid: JemaatEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

@@ -1,8 +1,11 @@
 import { JemaatEntity } from 'src/module/jemaat/entities/jemaat.entity';
+import { WilayahPelayanan } from 'src/module/wilayah_pelayanan/entities/wilayah_pelayanan.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -17,20 +20,21 @@ export class Blesscomn {
   @Column()
   nama_blesscomn: string;
 
-  @OneToOne(() => JemaatEntity, (jemaat) => jemaat.nama_lengkap)
+  @OneToOne(() => JemaatEntity, (jemaat) => jemaat.blesscomn)
+  @JoinColumn()
   leader: JemaatEntity;
 
-  @OneToMany(() => JemaatEntity, (jemaat) => jemaat.nama_lengkap)
+  @OneToMany(() => JemaatEntity, (jemaat) => jemaat.blesscomn)
+  @JoinColumn()
   vice_leader: JemaatEntity[];
 
-  @OneToMany(() => JemaatEntity, (jemaat) => jemaat.nama_lengkap)
+  @OneToMany(() => JemaatEntity, (jemaat) => jemaat.blesscomn)
+  @JoinColumn()
   jemaat: JemaatEntity[];
 
-  @Column({ type: 'float' })
-  everage_attendence_a_month: number;
-
-  @Column({ type: 'float' })
-  everage_attendence_a_year: number;
+  @ManyToOne(() => WilayahPelayanan, (wil) => wil.blesscomn, { onDelete: 'SET NULL' })
+  @JoinColumn()
+  wilayah_pelayanan: WilayahPelayanan;
 
   @CreateDateColumn()
   createdAt: Date;

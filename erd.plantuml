@@ -95,7 +95,6 @@ entity Kelompok_Murid{
     * pembimbing: Jemaat.id
     * murid: Jemaat.id[]
     buku: string
-    performance_a_month: number
 }
 
 entity Laporan_Kelompok_Murid{

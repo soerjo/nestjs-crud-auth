@@ -8,10 +8,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IBaptis } from '../interfaces/baptis.interface';
 
 @Entity()
-export class BaptisEntity implements IBaptis {
+export class BaptisEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -36,12 +35,12 @@ export class BaptisEntity implements IBaptis {
   @Column()
   surat_baptis: string;
 
-  @OneToOne(() => JemaatEntity, (jemaat) => jemaat.nama_lengkap)
+  @Column()
   dibaptis_oleh: string;
 
-  @OneToOne(() => JemaatEntity, (jemaat) => jemaat.id)
+  @OneToOne(() => JemaatEntity, (jemaat) => jemaat.baptis)
   @JoinColumn()
-  jemaatId: JemaatEntity;
+  jemaat: JemaatEntity;
 
   @CreateDateColumn()
   createdAt: Date;

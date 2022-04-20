@@ -17,7 +17,9 @@ export class WilayahPelayanan {
   @Column()
   nama_wilayah_pelayanan: string;
 
-  @OneToMany(() => Blesscomn, (blesscomn) => blesscomn.id)
+  @OneToMany(() => Blesscomn, (bc) => bc.wilayah_pelayanan, {
+    onDelete: 'SET NULL',
+  })
   @JoinTable()
   blesscomn: Blesscomn[];
 

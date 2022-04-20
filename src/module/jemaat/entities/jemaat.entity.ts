@@ -1,9 +1,13 @@
 import { BaptisEntity } from 'src/module/baptis/entities/bapti.entity';
+import { Blesscomn } from 'src/module/blesscomn/entities/blesscomn.entity';
 import { KelompokMurid } from 'src/module/kelompok_murid/entities/kelompok_murid.entity';
+import { WilayahPelayanan } from 'src/module/wilayah_pelayanan/entities/wilayah_pelayanan.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -43,19 +47,32 @@ export class JemaatEntity {
   @Column({ enum: Role, type: 'enum', default: Role.JEMAAT })
   role?: Role;
 
-  @Column({ nullable: true })
-  blesscomn?: string;
-
-  @Column({ nullable: true })
-  wilayah_pelayanan?: string;
-
-  @OneToMany(() => KelompokMurid, (murid) => murid.id, {
+  @ManyToOne(() => Blesscomn, (blesscomn) => blesscomn.jemaat, {
     nullable: true,
+    onDelete: 'SET NULL',
   })
-  kelompok_murid?: KelompokMurid[];
+  @JoinColumn()
+  blesscomn?: Blesscomn | null;
 
-  @OneToOne(() => BaptisEntity, (baptis) => baptis.id, { nullable: true })
-  baptis?: BaptisEntity;
+  @ManyToOne(() => WilayahPelayanan, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn()
+  wilayah_pelayanan?: WilayahPelayanan | null;
+
+  @OneToMany(() => KelompokMurid, (murid) => murid.murid, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn()
+  kelompok_murid?: KelompokMurid[] | null;
+
+  @OneToOne(() => BaptisEntity, (baptis) => baptis.jemaat, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  baptis?: BaptisEntity | null;
 
   @CreateDateColumn()
   createdAt: Date;
