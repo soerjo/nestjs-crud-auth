@@ -10,8 +10,8 @@ import {
 
 @Entity()
 export class LaporanIbadahMinggu {
-  @OneToOne(() => IbadahMinggu)
-  nama_ibadah: IbadahMinggu;
+  // @OneToOne(() => IbadahMinggu)
+  // nama_ibadah: IbadahMinggu;
 
   @Column({ type: 'float' })
   kehadiran_pria: number;

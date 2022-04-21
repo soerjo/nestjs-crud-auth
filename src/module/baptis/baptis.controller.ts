@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { PageOptionsDto } from 'src/util/dto/pageOptions.dto';
 import { BaptisService } from './baptis.service';
-import { CreateBaptiDto } from './dto/create-bapti.dto';
-import { UpdateBaptiDto } from './dto/update-bapti.dto';
+import { CreateBaptisDto } from './dto/create-baptis.dto';
+import { UpdateBaptisDto } from './dto/update-baptis.dto';
 
 @ApiTags('baptis')
 @Controller('baptis')
@@ -10,27 +11,27 @@ export class BaptisController {
   constructor(private readonly baptisService: BaptisService) {}
 
   @Post()
-  create(@Body() createBaptiDto: CreateBaptiDto) {
-    return this.baptisService.create(createBaptiDto);
+  create(@Body() createBaptisDto: CreateBaptisDto) {
+    return this.baptisService.create(createBaptisDto);
   }
 
   @Get()
-  findAll() {
-    return this.baptisService.findAll();
+  findAll(@Query() query: PageOptionsDto) {
+    return this.baptisService.getAllBaptisan(query);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.baptisService.findOne(+id);
+    return this.baptisService.getOneBaptisData(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBaptiDto: UpdateBaptiDto) {
-    return this.baptisService.update(+id, updateBaptiDto);
+  update(@Param('id') id: string, @Body() updateBaptisDto: UpdateBaptisDto) {
+    return this.baptisService.updateBaptisData(id, updateBaptisDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.baptisService.remove(+id);
+    return this.baptisService.removeBaptisData(id);
   }
 }

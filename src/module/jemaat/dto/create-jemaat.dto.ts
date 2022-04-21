@@ -1,6 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDateString, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsDateString,
+  IsEmail,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Gender, Role } from '../interfaces/jemaat.interface';
 
 export class CreateJemaatDto {
@@ -16,8 +24,14 @@ export class CreateJemaatDto {
   @IsNotEmpty()
   nama_panggilan: string;
 
+  @ApiProperty()
+  @IsEmail()
+  @IsOptional()
+  email?: string;
+
   @ApiProperty({ enum: Gender })
   @IsString()
+  @IsOptional()
   jenis_kelamin: Gender = Gender.LAKI_LAKI;
 
   @ApiProperty()
@@ -28,25 +42,28 @@ export class CreateJemaatDto {
 
   @ApiProperty({ enum: Role })
   @IsString()
-  role?: Role = Role.JEMAAT;
+  @IsOptional()
+  role: Role = Role.JEMAAT;
 
   @ApiProperty()
-  @IsDateString()
+  @IsDate()
   @Type(() => Date)
   @IsNotEmpty()
   tanggal_lahir: Date;
 
   @ApiProperty()
   @IsDateString()
-  @Type(() => Date)
+  @IsOptional()
   tempat_lahir?: string;
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   alamat?: string;
 
   @ApiProperty()
   @IsDateString()
   @Type(() => Date)
+  @IsOptional()
   tanggal_lahir_baru?: Date;
 }

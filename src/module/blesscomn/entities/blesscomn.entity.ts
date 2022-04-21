@@ -17,8 +17,8 @@ export class Blesscomn {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  nama_blesscomn: string;
+  @Column({ unique: true })
+  name: string;
 
   @OneToOne(() => JemaatEntity, (jemaat) => jemaat.blesscomn)
   @JoinColumn()

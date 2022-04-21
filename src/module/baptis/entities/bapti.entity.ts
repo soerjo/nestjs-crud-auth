@@ -1,5 +1,6 @@
 import { JemaatEntity } from 'src/module/jemaat/entities/jemaat.entity';
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -32,8 +33,8 @@ export class BaptisEntity {
   @Column()
   saksi02: string;
 
-  @Column()
-  surat_baptis: string;
+  @Column({ nullable: true })
+  surat_baptis?: string;
 
   @Column()
   dibaptis_oleh: string;

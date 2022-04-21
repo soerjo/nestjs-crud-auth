@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { PageOptionsDto } from 'src/util/dto/pageOptions.dto';
 import { BlesscomnService } from './blesscomn.service';
 import { CreateBlesscomnDto } from './dto/create-blesscomn.dto';
 import { UpdateBlesscomnDto } from './dto/update-blesscomn.dto';
@@ -15,8 +16,8 @@ export class BlesscomnController {
   }
 
   @Get()
-  findAll() {
-    return this.blesscomnService.findAll();
+  findAll(@Query() pageOptions: PageOptionsDto) {
+    return this.blesscomnService.getAllBlesscomn(pageOptions);
   }
 
   @Get(':id')

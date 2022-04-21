@@ -29,6 +29,9 @@ export class JemaatEntity {
   @Column({ nullable: true })
   nama_panggilan?: string;
 
+  @Column({ nullable: true })
+  email?: string;
+
   @Column({ type: 'date', nullable: true })
   tempat_lahir?: string;
 
@@ -51,27 +54,25 @@ export class JemaatEntity {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  @JoinColumn()
   blesscomn?: Blesscomn | null;
 
-  @ManyToOne(() => WilayahPelayanan, {
-    nullable: true,
-    onDelete: 'SET NULL',
-  })
-  @JoinColumn()
-  wilayah_pelayanan?: WilayahPelayanan | null;
+  // @ManyToOne(() => WilayahPelayanan, {
+  //   nullable: true,
+  //   onDelete: 'SET NULL',
+  // })
+  // wilayah_pelayanan?: WilayahPelayanan | null;
 
-  @OneToMany(() => KelompokMurid, (murid) => murid.murid, {
-    nullable: true,
-    onDelete: 'SET NULL',
-  })
-  @JoinColumn()
-  kelompok_murid?: KelompokMurid[] | null;
+  // @OneToMany(() => KelompokMurid, (murid) => murid.murid, {
+  //   nullable: true,
+  //   onDelete: 'SET NULL',
+  // })
+  // kelompok_murid?: KelompokMurid[] | null;
 
   @OneToOne(() => BaptisEntity, (baptis) => baptis.jemaat, {
     nullable: true,
     onDelete: 'SET NULL',
   })
+  @JoinColumn()
   baptis?: BaptisEntity | null;
 
   @CreateDateColumn()

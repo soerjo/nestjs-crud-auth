@@ -8,5 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [TypeOrmModule.forFeature([KelompokMurid], 'DB_MYSQL')],
   controllers: [KelompokMuridController],
   providers: [KelompokMuridService],
+  exports: [KelompokMuridService],
 })
 export class KelompokMuridModule {}

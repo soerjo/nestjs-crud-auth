@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { JemaatService } from './jemaat.service';
 import { CreateJemaatDto } from './dto/create-jemaat.dto';
 import { UpdateJemaatDto } from './dto/update-jemaat.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { PageOptionsDto } from 'src/util/dto/pageOptions.dto';
 
 @ApiTags('jemaat')
 @Controller('jemaat')
@@ -15,8 +16,8 @@ export class JemaatController {
   }
 
   @Get()
-  findAll() {
-    return this.jemaatService.getJemaat();
+  findAll(@Query() query: PageOptionsDto) {
+    return this.jemaatService.getAllJemaat(query);
   }
 
   @Get(':id')

@@ -14,11 +14,12 @@ export class WilayahPelayanan {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   nama_wilayah_pelayanan: string;
 
   @OneToMany(() => Blesscomn, (bc) => bc.wilayah_pelayanan, {
     onDelete: 'SET NULL',
+    nullable: true,
   })
   @JoinTable()
   blesscomn: Blesscomn[];

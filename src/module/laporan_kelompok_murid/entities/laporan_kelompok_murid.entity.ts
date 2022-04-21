@@ -10,12 +10,12 @@ import {
 
 @Entity()
 export class LaporanKelompokMurid {
-  @OneToOne(() => KelompokMurid, (murid) => murid.id)
-  nama_kelompok_murid: KelompokMurid;
+  // @OneToOne(() => KelompokMurid, (murid) => murid.id)
+  // nama_kelompok_murid: KelompokMurid;
 
-  @OneToMany(() => KelompokMurid, (murid) => murid.murid)
-  kehadiran_murid: KelompokMurid[];
-  buku: string;
+  // @OneToMany(() => KelompokMurid, (murid) => murid.murid)
+  // kehadiran_murid: KelompokMurid[];
+  // buku: string;
 
   @CreateDateColumn()
   @PrimaryColumn()

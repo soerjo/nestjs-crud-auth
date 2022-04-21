@@ -15,19 +15,18 @@ export class KelompokMurid {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   nama_kelompok_murid: string;
 
   @Column()
   buku: string;
 
-  @OneToOne(() => JemaatEntity)
-  @JoinColumn()
-  pembimbing: JemaatEntity;
+  // @OneToOne(() => JemaatEntity)
+  // pembimbing: JemaatEntity;
 
-  @OneToMany(() => JemaatEntity, (jemaat) => jemaat.kelompok_murid)
-  @JoinColumn()
-  murid: JemaatEntity[];
+  // @OneToMany(() => JemaatEntity, (jemaat) => jemaat.kelompok_murid)
+  // @JoinColumn()
+  // murid: JemaatEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

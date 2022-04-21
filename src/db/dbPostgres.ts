@@ -6,7 +6,7 @@ export class DbPostgres implements TypeOrmOptionsFactory {
     return {
       name: 'DB_POSTGRES',
       type: 'postgres',
-      port: +process.env.SERVER_DB_POSTGRES_PORT,
+      port: +process.env.SERVER_DB_POSTGRES_PORT || 5432,
       username: process.env.SERVER_DB_POSTGRES_USERNAME,
       password: process.env.SERVER_DB_POSTGRES_PASSWORD,
       database: process.env.SERVER_DB_POSTGRES_DATABASE,

@@ -1,26 +1,113 @@
-import { Injectable } from '@nestjs/common';
-import { CreateBaptiDto } from './dto/create-bapti.dto';
-import { UpdateBaptiDto } from './dto/update-bapti.dto';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  OnModuleInit,
+} from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PageDto } from 'src/util/dto/page.dto';
+import { PageMetaDto } from 'src/util/dto/pageMeta.dto';
+import { PageOptionsDto } from 'src/util/dto/pageOptions.dto';
+import { Repository } from 'typeorm';
+import { JemaatService } from '../jemaat/jemaat.service';
+import { CreateBaptisDto } from './dto/create-baptis.dto';
+import { UpdateBaptisDto } from './dto/update-baptis.dto';
+import { BaptisEntity } from './entities/bapti.entity';
 
 @Injectable()
 export class BaptisService {
-  create(createBaptiDto: CreateBaptiDto) {
-    return 'This action adds a new bapti';
+  constructor(
+    @InjectRepository(BaptisEntity, 'DB_MYSQL')
+    private baptisRepo: Repository<BaptisEntity>,
+    private jemaatService: JemaatService,
+  ) {}
+
+  async create(createBaptisDto: CreateBaptisDto) {
+    const { nama } = createBaptisDto;
+    const newBaptisData = this.baptisRepo.create({ ...createBaptisDto });
+    const jemaatData = await this.jemaatService.getByName(nama);
+
+    const checkDuplicate = await this.getOneBaptisByName(jemaatData.nama_lengkap);
+    if (!jemaatData) throw new BadRequestException(`jemaat with name: ${nama} is not found!`);
+    if (checkDuplicate)
+      throw new BadRequestException(`can not duplicate data! name: ${nama} has regirted`);
+
+    newBaptisData.jemaat = jemaatData;
+
+    return await this.baptisRepo.save({ ...newBaptisData });
   }
 
-  findAll() {
-    return `This action returns all baptis`;
+  async getAllBaptisan(pageOptions: PageOptionsDto) {
+    const { order, name, skip, take } = pageOptions;
+    const queryBuilder = this.baptisRepo.createQueryBuilder('baptis');
+
+    queryBuilder
+      .orderBy('baptis.createdAt', order)
+      .leftJoin('baptis.jemaat', 'jemaat')
+      .addSelect('jemaat.nama_lengkap')
+      .skip(skip)
+      .take(take);
+
+    if (name) {
+      queryBuilder.where('jemaat.nama_lengkap like :name', { name: `%${name}%` });
+    }
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ pageOptions, itemCount });
+    return new PageDto(entities, pageMetaDto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} bapti`;
+  async getOneBaptisData(id: string) {
+    const queryBuilder = this.baptisRepo.createQueryBuilder('baptis');
+
+    queryBuilder
+      .where('baptis.id = :id', { id })
+      .leftJoin('baptis.jemaat', 'jemaat')
+      .addSelect('jemaat.nama_lengkap');
+
+    return await queryBuilder.getOne();
   }
 
-  update(id: number, updateBaptiDto: UpdateBaptiDto) {
-    return `This action updates a #${id} bapti`;
+  async getOneBaptisByName(name: string) {
+    const queryBuilder = this.baptisRepo.createQueryBuilder('baptis');
+    queryBuilder.leftJoin('baptis.jemaat', 'jemaat').where('jemaat.nama_lengkap = :name', { name });
+
+    return await queryBuilder.getOne();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} bapti`;
+  async updateBaptisData(id: string, updateBaptisDto: UpdateBaptisDto) {
+    const { nama } = updateBaptisDto;
+    const baptisData = await this.getOneBaptisData(id);
+    if (!baptisData)
+      throw new BadRequestException(`can not update! baptis data id: ${id} is not found!`);
+    const jemaatData = await this.jemaatService.getByName(nama);
+
+    const checkDuplicate = await this.getOneBaptisByName(jemaatData.nama_lengkap);
+    if (!jemaatData) throw new BadRequestException(`jemaat with name: ${nama} is not found!`);
+    if (checkDuplicate)
+      throw new BadRequestException(`can not duplicate data! name: ${nama} has regirted`);
+
+    baptisData.jemaat = jemaatData;
+
+    return await this.baptisRepo.save({ ...baptisData });
+  }
+
+  async removeBaptisData(id: string) {
+    const baptisData = await this.getOneBaptisData(id);
+    if (!baptisData) throw new BadRequestException(`can not update baptis data with id: ${id}`);
+
+    await this.baptisRepo.remove(baptisData);
+
+    return {
+      status: 200,
+      message: `data baptis id: ${id}, has deleted!`,
+      data: {
+        nama: baptisData.jemaat.nama_lengkap,
+        tanggal_baptis: baptisData.waktu,
+      },
+    };
   }
 }
